@@ -141,7 +141,7 @@ int main()
 	
 	lista l1;
 	
-	l1.inserirInicio("Vinicius","masculinah",25,"claro mo");
+	l1.inserirInicio("Vinicius","masculino",25,"sim");
 	
 	l1.imprimir();
 	
