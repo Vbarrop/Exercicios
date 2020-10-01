@@ -3,212 +3,120 @@
 
 using namespace std;
 
-void pause()
-{
-    string temp;
-    cout << "\n\n-----Aperte enter para sair-----";
-    getline(cin, temp);
-    cin.get();
-}
-
-class jogador
+class Alunos
 {
 private:
-    string nome, posicao;
-    int numero;
-
-public:
-    jogador()
-    {
-    }
-    jogador(string n, string p, int nu)
-    {
-        nome = n;
-        posicao = p;
-        numero = nu;
-    }
-
-    //sobrecarga operador ==
-    bool operator==(const jogador &p) const
-    {
-        return nome == p.nome;
-    }
-
-    void imprimir()
-    {
-        cout << nome << " - " << posicao << " - " << numero << endl;
-    }
-};
-
-class equipe
-{
-private:
-    list<jogador> jogadores;
     string nome;
-    string naciolidade;
-    int ano;
+    float nota;
+    float pontoExtra;
 
 public:
-    equipe()
+    Alunos()
     {
-        nome = "";
-        naciolidade = "";
-        ano = 0;
-    }
-    equipe(string n, string na, int a)
-    {
-        nome = n;
-        naciolidade = na;
-        ano = a;
     }
 
-    //sobrecarga operador ==
-    bool operator==(const equipe &p) const
+    Alunos(string nom, float n)
+    {
+        nome = nom;
+        nota = n;
+    }
+
+    bool operator==(const Alunos &p) const
     {
         return nome == p.nome;
     }
 
-    void insereJogador()
+    void AlteraPontoExtra(int posicao)
     {
-        cout << "Time a ser adicionado o jogador: " << nome << endl;
-        string nomeJogador, posicaoJogador;
-        int numeroJogador;
-        cout << "Digite o nome do jogador: ";
-        cin >> nomeJogador;
-        cout << "Digite a posição do jogador: ";
-        cin >> posicaoJogador;
-        cout << "Digite o número do jogador: ";
-        cin >> numeroJogador;
-        jogador temp(nomeJogador, posicaoJogador, numeroJogador);
-        jogadores.push_back(temp);
-        cout << "\nJogador inserido com sucesso\n";
-    }
-
-    void imprimirEquipe()
-    {
-        cout << "Equipe: " << nome;
-        cout << "\nJogadores da equipe:\n";
-        for (auto item : jogadores)
+        if (posicao == 1)
         {
-            item.imprimir();
+            pontoExtra = 0.1;
+        }
+        else if (posicao == 2)
+        {
+            pontoExtra = 0.75;
+        }
+        else if (posicao == 3)
+        {
+            pontoExtra = 0.5;
+        }
+        else
+        {
+            pontoExtra = 0;
         }
     }
-    void removeJogador()
+
+    void Imprimir()
     {
-        string n;
-        cout << "Digite o nome do jogador a ser removido:";
-        cin >> n;
-        jogador temp(n, "", 0);
-        jogadores.remove(temp);
+        cout << "Nome: " << nome << endl;
+        cout << "Nota: " << nota << endl;
+        cout << "Percentual Pontos Extras: " << pontoExtra * 100 << "%" << endl;
+        cout << "Nota Final: " << (1 + pontoExtra) * nota << endl;
     }
 };
 
-void cadastroJogador(list<equipe> &lista)
+void atualizaLista(list<Alunos> &alunos)
 {
-    cout << "Em qual time deseja adicionar um jogador? ";
-    string e;
-    cin >> e;
-    equipe temp(e, "", 0);
-    for (auto &item : lista)
+
+    int contador = alunos.size();
+    for (auto &item : alunos)
     {
-        if (item == temp)
-        {
-            item.insereJogador();
-        }
+        item.AlteraPontoExtra(contador);
+        contador--;
     }
 }
 
 int main()
 {
-    list<equipe> torneio;
-    string nome, nacionalidade;
-    equipe equipeAux;
+    list<Alunos> sala;
+    Alunos aluno;
+    double nota;
 
-    int ano;
-    char opcao;
+    string nome;
+    char op;
 
     do
     {
-        system("clear");
-        cout << "\t\t----- Cadastro de Campeonatos 1.0 -----" << endl
-             << endl;
-        cout << "1 - Adicionar Time ao Torneio" << endl;
-        cout << "2 - Remover Time do torneio" << endl;
-        cout << "3 - Adicionar Jogador ao time" << endl;
-        cout << "4 - Remover jogador do time" << endl;
-        cout << "5 - Imprimir" << endl;
-        cout << "0 - Sair" << endl;
-
-        cin >> opcao;
-        switch (opcao)
+        cout << "\t\tAvaliação Mailson" << endl << endl;
+        cout << "1 adicionar alunos" << endl;
+        cout << "2 remover Alunos" << endl;
+        cout << "3 imprimir alunos" << endl;
+        cout << "4 sair";
+        cin >> op;
+        switch (op)
         {
         case '1':
-            cin.ignore();
-            cout << "Digite o nome do time: ";
+            cout << "Digite o nome: ";
             cin >> nome;
-            cin.ignore();
-            cout << "Digite a nacionalidade: ";
-            cin >> nacionalidade;
-            cout << "Digite o ano de criação: ";
-            cin >> ano;
-            equipeAux = equipe(nome, nacionalidade, ano);
-            torneio.push_back(equipeAux);
+            cout << "Digite a nota";
+            cin >> nota;
+            aluno = Alunos(nome, nota);
+            sala.push_back(aluno);
+            atualizaLista(sala);
+
             break;
         case '2':
-
-            cout << "Digite o nome do time que deseja remover: ";
+            cout << "Digite o nome que deseja remover : ";
             cin >> nome;
-            equipeAux = equipe(nome, "", 0);
-            for (auto &item : torneio)
+            aluno = Alunos(nome, 0);
+            for (auto &item : sala)
             {
-                if (item == equipeAux)
+                if (item == aluno)
                 {
-                    torneio.remove(equipeAux);
+                    sala.remove(aluno);
+                    atualizaLista(sala);
                     break;
                 }
             }
+
             break;
         case '3':
-            cout << "Digite o nome do time que deseja adicionar um novo jogador: ";
-            cin >> nome;
-            equipeAux = equipe(nome, "", 0);
-            for (auto &item : torneio)
+            for (auto item : sala)
             {
-                if (item == equipeAux)
-                {
-                    item.insereJogador();
-                    break;
-                }
+                item.Imprimir();
             }
 
-            break;
-        case '4':
-            cout << "Digite o nome do time que deseja remover um jogador: ";
-            cin >> nome;
-            equipeAux = equipe(nome, "", 0);
-            for (auto &item : torneio)
-            {
-                if (item == equipeAux)
-                {
-                    item.removeJogador();
-                    break;
-                }
-            }
-            break;
-        case '5':
-            for (auto item : torneio)
-            {
-                item.imprimirEquipe();
-            }
-            break;
-        case '0':
-            cout << "Ate mais";
-            break;
-        default:
-            cout << "Opcao Invalida";
             break;
         }
-        pause();
-
-    } while (opcao == 0);
+    } while (op != '4');
 }
